@@ -17,12 +17,9 @@ export class SamplePreviewModalComponent implements OnInit {
     private modalController: ModalController,
     private sanitizer: DomSanitizer
   ) {
-    // Set the document URL - trying HTML first, then PDF if available
+    // Use HTML version since PDF needs to be generated
     const htmlPath = 'assets/sample-documents/sample-business-doc.html';
-    const pdfPath = 'assets/sample-documents/sample-business-doc.pdf';
-    
-    // Try to use PDF first if available, fallback to HTML
-    this.documentUrl = this.sanitizer.bypassSecurityTrustResourceUrl(pdfPath);
+    this.documentUrl = this.sanitizer.bypassSecurityTrustResourceUrl(htmlPath);
   }
 
   ngOnInit() {
@@ -37,14 +34,14 @@ export class SamplePreviewModalComponent implements OnInit {
   }
 
   downloadDocument() {
-    // Trigger download of the sample document
-    const link = document.createElement('a');
-    link.href = 'assets/sample-documents/sample-business-doc.pdf';
-    link.download = 'sample-business-doc.pdf';
-    link.target = '_blank';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // Open HTML in new tab for printing to PDF
+    const htmlUrl = 'assets/sample-documents/sample-business-doc.html';
+    window.open(htmlUrl, '_blank');
+    
+    // Show instruction to user
+    setTimeout(() => {
+      alert('To download as PDF: Press Ctrl+P (or Cmd+P on Mac) in the opened tab and select "Save as PDF"');
+    }, 500);
   }
 
   onIframeLoad() {
@@ -55,10 +52,7 @@ export class SamplePreviewModalComponent implements OnInit {
   onIframeError() {
     this.isLoading = false;
     this.loadError = true;
-    
-    // Fallback to HTML version
-    const htmlPath = 'assets/sample-documents/sample-business-doc.html';
-    this.documentUrl = this.sanitizer.bypassSecurityTrustResourceUrl(htmlPath);
+    console.error('Error loading sample document');
   }
 
   retryLoad() {

@@ -156,18 +156,19 @@ export class UploadOptionComponent implements OnInit {
    */
   downloadSampleDocument() {
     try {
-      const link = document.createElement('a');
-      link.href = 'assets/sample-documents/sample-business-doc.pdf';
-      link.download = 'sample-business-doc.pdf';
-      link.target = '_blank';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      // Open HTML in new tab for printing to PDF
+      const htmlUrl = 'assets/sample-documents/sample-business-doc.html';
+      window.open(htmlUrl, '_blank');
       
-      console.log('Sample document download initiated');
+      // Show instruction to user
+      setTimeout(() => {
+        alert('To download as PDF: Press Ctrl+P (or Cmd+P on Mac) in the opened tab and select "Save as PDF"');
+      }, 500);
+      
+      console.log('Sample document opened for download');
     } catch (error) {
-      console.error('Error downloading sample document:', error);
-      alert('Unable to download the sample document. Please try again.');
+      console.error('Error opening sample document:', error);
+      alert('Unable to open the sample document. Please try again.');
     }
   }
 

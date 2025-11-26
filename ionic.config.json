@@ -1,0 +1,7 @@
+{
+  "name": "OnpoardingStore",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

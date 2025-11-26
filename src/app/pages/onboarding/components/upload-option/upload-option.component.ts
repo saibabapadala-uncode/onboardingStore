@@ -152,13 +152,35 @@ export class UploadOptionComponent implements OnInit {
   }
 
   /**
+   * Get absolute URL for assets - works in both local and production
+   */
+  private getAssetUrl(path: string): string {
+    // Remove leading slash if present
+    const cleanPath = path.startsWith('/') ? path.substring(1) : path;
+    
+    // Get base href from document
+    const baseHref = document.querySelector('base')?.getAttribute('href') || '/';
+    
+    // Construct full URL
+    const origin = window.location.origin;
+    const fullPath = baseHref.endsWith('/') ? baseHref + cleanPath : baseHref + '/' + cleanPath;
+    
+    return origin + fullPath;
+  }
+
+  /**
    * Download sample business document template
    */
   downloadSampleDocument() {
     try {
       // Open HTML in new tab for printing to PDF
-      const htmlUrl = 'assets/sample-documents/sample-business-doc.html';
-      window.open(htmlUrl, '_blank');
+      const htmlUrl = this.getAssetUrl('assets/sample-documents/sample-business-doc.html');
+      const opened = window.open(htmlUrl, '_blank');
+      
+      if (!opened) {
+        alert('Please allow pop-ups for this site to download the sample document.');
+        return;
+      }
       
       // Show instruction to user
       setTimeout(() => {

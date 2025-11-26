@@ -1,0 +1,29 @@
+.upload-option-container {
+  padding: 1rem;
+
+  #dropzone-file {
+    &:hover {
+      + label {
+        background-color: rgba(59, 130, 246, 0.05);
+      }
+    }
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  textarea,
+  select {
+    transition: all 0.2s ease-in-out;
+    
+    &:focus {
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+  }
+
+  ion-spinner {
+    --color: white;
+    width: 20px;
+    height: 20px;
+  }
+}

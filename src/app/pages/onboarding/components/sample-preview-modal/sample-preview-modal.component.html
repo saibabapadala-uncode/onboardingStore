@@ -1,0 +1,85 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Sample Business Document</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Loading Indicator -->
+  <div *ngIf="isLoading" class="flex items-center justify-center h-full">
+    <div class="text-center">
+      <ion-spinner name="crescent" color="primary"></ion-spinner>
+      <p class="mt-4 text-gray-600 dark:text-gray-400">Loading document preview...</p>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="loadError && !isLoading" class="flex items-center justify-center h-full">
+    <div class="text-center p-6">
+      <ion-icon name="alert-circle-outline" class="text-red-500" style="font-size: 64px;"></ion-icon>
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-white mt-4 mb-2">
+        Unable to Load Document
+      </h3>
+      <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+        The document preview could not be loaded. You can still download the document.
+      </p>
+      <div class="flex gap-2 justify-center">
+        <button
+          (click)="retryLoad()"
+          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700"
+        >
+          <ion-icon name="refresh-outline" class="mr-2"></ion-icon>
+          Retry
+        </button>
+        <button
+          (click)="downloadDocument()"
+          class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700"
+        >
+          <ion-icon name="download-outline" class="mr-2"></ion-icon>
+          Download Document
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Document Preview -->
+  <div *ngIf="!loadError" class="document-container" [class.hidden]="isLoading">
+    <iframe
+      [src]="documentUrl"
+      class="document-iframe"
+      (load)="onIframeLoad()"
+      (error)="onIframeError()"
+    ></iframe>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <div class="flex justify-between items-center p-3">
+      <div class="text-sm text-gray-600 dark:text-gray-400">
+        <ion-icon name="information-circle-outline" class="mr-1"></ion-icon>
+        Fill this template with your business details
+      </div>
+      <div class="flex gap-2">
+        <button
+          (click)="downloadDocument()"
+          class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+        >
+          <ion-icon name="download-outline" class="mr-2"></ion-icon>
+          Download Template
+        </button>
+        <button
+          (click)="closeModal()"
+          class="text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-footer>

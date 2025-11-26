@@ -1,0 +1,78 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Restaurant Onboarding</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="max-w-4xl mx-auto">
+    <!-- Header Section -->
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Welcome to Our Platform</h1>
+      <p class="text-gray-600 dark:text-gray-400">Complete your restaurant registration in just a few steps</p>
+    </div>
+
+    <!-- Segment Buttons using Flowbite Tabs -->
+    <div class="mb-8">
+      <ion-segment value="google" (ionChange)="segmentChanged($event)">
+        <ion-segment-button value="google">
+          <ion-label>
+            <ion-icon name="search-outline"></ion-icon>
+            Google Search
+          </ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="upload">
+          <ion-label>
+            <ion-icon name="document-outline"></ion-icon>
+            Document Upload
+          </ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="manual">
+          <ion-label>
+            <ion-icon name="create-outline"></ion-icon>
+            Manual Entry
+          </ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </div>
+
+    <!-- Form Content -->
+    <form [formGroup]="onboardingForm" class="space-y-6">
+      <!-- Google Search Option -->
+      <div *ngIf="selectedSegment === 'google'" class="animate-fade-in">
+        <app-google-option [parentForm]="onboardingForm"></app-google-option>
+      </div>
+
+      <!-- Upload Option -->
+      <div *ngIf="selectedSegment === 'upload'" class="animate-fade-in">
+        <app-upload-option [parentForm]="onboardingForm"></app-upload-option>
+      </div>
+
+      <!-- Manual Entry Option -->
+      <div *ngIf="selectedSegment === 'manual'" class="animate-fade-in">
+        <app-manual-option [parentForm]="onboardingForm"></app-manual-option>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex justify-between mt-8">
+        <button type="button" 
+                (click)="resetForm()"
+                class="text-white bg-gray-600 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+          Reset Form
+        </button>
+        <button type="submit" 
+                (click)="submitOnboarding()"
+                [disabled]="onboardingForm.invalid"
+                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 disabled:opacity-50 disabled:cursor-not-allowed">
+          Complete Registration
+        </button>
+      </div>
+    </form>
+
+    <!-- Form Status Debug (Development Only) -->
+    <div class="mt-8 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg" *ngIf="false">
+      <h3 class="text-sm font-semibold mb-2">Form Status (Debug)</h3>
+      <pre class="text-xs">{{ onboardingForm.value | json }}</pre>
+    </div>
+  </div>
+</ion-content>

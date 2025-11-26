@@ -1,0 +1,264 @@
+<div class="upload-option-container" [formGroup]="parentForm">
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+      Upload Your Documents
+    </h3>
+    <p class="text-sm text-gray-600 dark:text-gray-400">
+      Upload your business documents (GST certificate, FSSAI license, PAN card, etc.) and we'll extract the details automatically
+    </p>
+  </div>
+
+  <!-- Sample Document Section -->
+  <div class="mb-6 p-4 bg-blue-50 border-l-4 border-blue-500 rounded-lg dark:bg-blue-900/20 dark:border-blue-400">
+    <div class="flex items-start">
+      <div class="flex-shrink-0">
+        <ion-icon name="information-circle" class="text-blue-600 dark:text-blue-400" style="font-size: 24px;"></ion-icon>
+      </div>
+      <div class="ml-3 flex-1">
+        <h4 class="text-md font-semibold text-blue-900 dark:text-blue-300 mb-2">
+          Need Help? Download Sample Document
+        </h4>
+        <p class="text-sm text-blue-800 dark:text-blue-200 mb-3">
+          If your documents do not contain the required business details, download and fill this sample document template with your restaurant information.
+        </p>
+        <div class="flex flex-wrap gap-2">
+          <button
+            type="button"
+            (click)="previewSampleDocument()"
+            class="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-700 bg-white border border-blue-300 rounded-lg hover:bg-blue-50 focus:ring-4 focus:outline-none focus:ring-blue-200 dark:bg-blue-800 dark:text-blue-200 dark:border-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-700"
+          >
+            <ion-icon name="eye-outline" class="mr-2"></ion-icon>
+            Preview Sample
+          </button>
+          <button
+            type="button"
+            (click)="downloadSampleDocument()"
+            class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          >
+            <ion-icon name="download-outline" class="mr-2"></ion-icon>
+            Download Sample
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- File Upload Area -->
+  <div class="mb-6">
+    <label for="dropzone-file" 
+           class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500">
+      <div class="flex flex-col items-center justify-center pt-5 pb-6">
+        <ion-icon name="cloud-upload-outline" class="w-10 h-10 mb-3 text-gray-400"></ion-icon>
+        <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+          <span class="font-semibold">Click to upload</span> or drag and drop
+        </p>
+        <p class="text-xs text-gray-500 dark:text-gray-400">
+          PDF, DOC, DOCX, JPG, PNG (MAX. 10MB)
+        </p>
+        <p class="text-xs text-gray-400 mt-2">
+          Supported: {{ supportedFormats.join(', ') }}
+        </p>
+      </div>
+      <input id="dropzone-file" 
+             type="file" 
+             class="hidden" 
+             multiple
+             accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+             (change)="onFileSelected($event)" />
+    </label>
+  </div>
+
+  <!-- Uploaded Files List -->
+  <div *ngIf="uploadedFiles.length > 0" class="mb-6">
+    <h4 class="text-md font-semibold text-gray-900 dark:text-white mb-3">
+      Uploaded Documents ({{ uploadedFiles.length }})
+    </h4>
+    <div class="space-y-2">
+      <div *ngFor="let file of uploadedFiles; let i = index" 
+           class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+        <div class="flex items-center space-x-3">
+          <ion-icon [name]="getFileIcon(file.type) + '-outline'" 
+                    class="w-6 h-6 text-gray-500"></ion-icon>
+          <div>
+            <p class="text-sm font-medium text-gray-900 dark:text-white">{{ file.name }}</p>
+            <p class="text-xs text-gray-500">{{ formatFileSize(file.base64 || '') }}</p>
+          </div>
+        </div>
+        <button type="button" 
+                (click)="removeFile(i)"
+                class="text-red-600 hover:text-red-800">
+          <ion-icon name="trash-outline" class="w-5 h-5"></ion-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Process Documents Button -->
+    <button type="button"
+            (click)="processDocuments()"
+            [disabled]="isProcessing"
+            class="mt-4 w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+      <span *ngIf="!isProcessing">
+        <ion-icon name="scan-outline" class="mr-2"></ion-icon>
+        Extract Information from Documents
+      </span>
+      <span *ngIf="isProcessing" class="flex items-center justify-center">
+        <ion-spinner name="crescent" class="mr-2"></ion-spinner>
+        Processing Documents...
+      </span>
+    </button>
+  </div>
+
+  <!-- Extraction Results -->
+  <div *ngIf="extractionResults" class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+    <div class="flex items-start">
+      <ion-icon name="information-circle" class="text-blue-500 mr-2 mt-1"></ion-icon>
+      <div>
+        <h4 class="font-semibold text-blue-900">Extraction Complete!</h4>
+        <p class="text-sm text-blue-700">
+          We've extracted information from your documents. Please review and complete any missing fields.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form Fields -->
+  <div class="space-y-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Restaurant Name -->
+      <div>
+        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+          Restaurant Name *
+        </label>
+        <input type="text"
+               formControlName="restaurantName"
+               placeholder="Enter restaurant name"
+               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+      </div>
+
+      <!-- Owner Name -->
+      <div>
+        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+          Owner Name *
+        </label>
+        <input type="text"
+               formControlName="ownerName"
+               placeholder="Enter owner name"
+               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Contact Number -->
+      <div>
+        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+          Contact Number *
+        </label>
+        <input type="tel"
+               formControlName="contactNumber"
+               placeholder="10-digit mobile number"
+               maxlength="10"
+               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+      </div>
+
+      <!-- Email -->
+      <div>
+        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+          Email *
+        </label>
+        <input type="email"
+               formControlName="email"
+               placeholder="email@example.com"
+               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+      </div>
+    </div>
+
+    <!-- Address -->
+    <div>
+      <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+        Address *
+      </label>
+      <textarea formControlName="address"
+                rows="2"
+                placeholder="Full address"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></textarea>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <!-- City -->
+      <div>
+        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+          City *
+        </label>
+        <input type="text"
+               formControlName="city"
+               placeholder="City"
+               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+      </div>
+
+      <!-- State -->
+      <div>
+        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+          State *
+        </label>
+        <input type="text"
+               formControlName="state"
+               placeholder="State"
+               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+      </div>
+
+      <!-- Pincode -->
+      <div>
+        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+          Pincode *
+        </label>
+        <input type="text"
+               formControlName="pincode"
+               placeholder="6-digit pincode"
+               maxlength="6"
+               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+      </div>
+    </div>
+
+    <!-- Registration Numbers -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <!-- GST Number -->
+      <div>
+        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+          GST Number
+          <span class="text-xs text-gray-500">(15 characters)</span>
+        </label>
+        <input type="text"
+               formControlName="gstNumber"
+               placeholder="e.g., 22AAAAA0000A1Z5"
+               maxlength="15"
+               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+      </div>
+
+      <!-- FSSAI Number -->
+      <div>
+        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+          FSSAI Number
+          <span class="text-xs text-gray-500">(14 digits)</span>
+        </label>
+        <input type="text"
+               formControlName="fssaiNumber"
+               placeholder="14-digit FSSAI"
+               maxlength="14"
+               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+      </div>
+
+      <!-- PAN Number -->
+      <div>
+        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+          PAN Number
+          <span class="text-xs text-gray-500">(10 characters)</span>
+        </label>
+        <input type="text"
+               formControlName="panNumber"
+               placeholder="e.g., ABCDE1234F"
+               maxlength="10"
+               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+      </div>
+    </div>
+  </div>
+</div>

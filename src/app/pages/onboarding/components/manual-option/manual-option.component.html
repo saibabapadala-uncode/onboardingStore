@@ -1,0 +1,308 @@
+<div class="manual-option-container" [formGroup]="parentForm">
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+      Enter Details Manually
+    </h3>
+    <p class="text-sm text-gray-600 dark:text-gray-400">
+      Fill in your restaurant details manually. All fields marked with * are required.
+    </p>
+  </div>
+
+  <!-- Form Fields -->
+  <div class="space-y-6">
+    <!-- Basic Information Section -->
+    <div class="form-section">
+      <h4 class="text-md font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+        <ion-icon name="restaurant-outline" class="mr-2"></ion-icon>
+        Basic Information
+      </h4>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Restaurant Name -->
+        <div>
+          <label for="restaurantName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            Restaurant Name *
+          </label>
+          <input
+            type="text"
+            id="restaurantName"
+            formControlName="restaurantName"
+            placeholder="Enter restaurant name"
+            [class.border-red-500]="isFieldInvalid('restaurantName')"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+          <p *ngIf="getErrorMessage('restaurantName')" class="mt-1 text-xs text-red-600">
+            {{ getErrorMessage('restaurantName') }}
+          </p>
+        </div>
+
+        <!-- Owner Name -->
+        <div>
+          <label for="ownerName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            Owner Name *
+          </label>
+          <input
+            type="text"
+            id="ownerName"
+            formControlName="ownerName"
+            placeholder="Enter owner name"
+            [class.border-red-500]="isFieldInvalid('ownerName')"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+          <p *ngIf="getErrorMessage('ownerName')" class="mt-1 text-xs text-red-600">
+            {{ getErrorMessage('ownerName') }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Information Section -->
+    <div class="form-section">
+      <h4 class="text-md font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+        <ion-icon name="call-outline" class="mr-2"></ion-icon>
+        Contact Information
+      </h4>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Contact Number -->
+        <div>
+          <label for="contactNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            Contact Number *
+          </label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <span class="text-gray-500 text-sm">+91</span>
+            </div>
+            <input
+              type="tel"
+              id="contactNumber"
+              formControlName="contactNumber"
+              (input)="onlyNumbers($event, 'contactNumber')"
+              placeholder="10-digit mobile number"
+              maxlength="10"
+              [class.border-red-500]="isFieldInvalid('contactNumber')"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-12 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            />
+          </div>
+          <p *ngIf="getErrorMessage('contactNumber')" class="mt-1 text-xs text-red-600">
+            {{ getErrorMessage('contactNumber') }}
+          </p>
+        </div>
+
+        <!-- Email -->
+        <div>
+          <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            Email *
+          </label>
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            placeholder="email@example.com"
+            [class.border-red-500]="isFieldInvalid('email')"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+          <p *ngIf="getErrorMessage('email')" class="mt-1 text-xs text-red-600">
+            {{ getErrorMessage('email') }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Location Information Section -->
+    <div class="form-section">
+      <h4 class="text-md font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+        <ion-icon name="location-outline" class="mr-2"></ion-icon>
+        Location Information
+      </h4>
+
+      <!-- Address -->
+      <div class="mb-4">
+        <label for="address" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+          Address *
+        </label>
+        <textarea
+          id="address"
+          formControlName="address"
+          rows="3"
+          placeholder="Enter full address including street, landmark, etc."
+          [class.border-red-500]="isFieldInvalid('address')"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        ></textarea>
+        <p *ngIf="getErrorMessage('address')" class="mt-1 text-xs text-red-600">
+          {{ getErrorMessage('address') }}
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- City -->
+        <div>
+          <label for="city" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            City *
+          </label>
+          <input
+            type="text"
+            id="city"
+            formControlName="city"
+            placeholder="City"
+            [class.border-red-500]="isFieldInvalid('city')"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+          <p *ngIf="getErrorMessage('city')" class="mt-1 text-xs text-red-600">
+            {{ getErrorMessage('city') }}
+          </p>
+        </div>
+
+        <!-- State -->
+        <div>
+          <label for="state" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            State *
+          </label>
+          <select
+            id="state"
+            formControlName="state"
+            [class.border-red-500]="isFieldInvalid('state')"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          >
+            <option value="">Select State</option>
+            <option *ngFor="let state of indianStates" [value]="state">{{ state }}</option>
+          </select>
+          <p *ngIf="getErrorMessage('state')" class="mt-1 text-xs text-red-600">
+            {{ getErrorMessage('state') }}
+          </p>
+        </div>
+
+        <!-- Pincode -->
+        <div>
+          <label for="pincode" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            Pincode *
+          </label>
+          <input
+            type="text"
+            id="pincode"
+            formControlName="pincode"
+            (input)="onlyNumbers($event, 'pincode')"
+            placeholder="6-digit pincode"
+            maxlength="6"
+            [class.border-red-500]="isFieldInvalid('pincode')"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+          <p *ngIf="getErrorMessage('pincode')" class="mt-1 text-xs text-red-600">
+            {{ getErrorMessage('pincode') }}
+          </p>
+        </div>
+      </div>
+
+      <!-- GPS Coordinates -->
+      <div class="mt-4">
+        <button
+          type="button"
+          (click)="getCurrentLocation()"
+          class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+        >
+          <ion-icon name="locate-outline" class="mr-2"></ion-icon>
+          Get Current Location
+        </button>
+        <div class="mt-2 text-xs text-gray-500" *ngIf="parentForm.get('latitude')?.value && parentForm.get('longitude')?.value">
+          Location captured: {{ parentForm.get('latitude')?.value }}, {{ parentForm.get('longitude')?.value }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Legal Information Section -->
+    <div class="form-section">
+      <h4 class="text-md font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+        <ion-icon name="document-text-outline" class="mr-2"></ion-icon>
+        Legal Information
+      </h4>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- GST Number -->
+        <div>
+          <label for="gstNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            GST Number
+            <span class="text-xs text-gray-500 ml-1">(Optional)</span>
+          </label>
+          <input
+            type="text"
+            id="gstNumber"
+            formControlName="gstNumber"
+            (input)="formatGSTNumber($event)"
+            placeholder="e.g., 22AAAAA0000A1Z5"
+            maxlength="15"
+            [class.border-red-500]="isFieldInvalid('gstNumber')"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+          <p class="mt-1 text-xs text-gray-500">15 character alphanumeric</p>
+          <p *ngIf="getErrorMessage('gstNumber')" class="mt-1 text-xs text-red-600">
+            {{ getErrorMessage('gstNumber') }}
+          </p>
+        </div>
+
+        <!-- FSSAI Number -->
+        <div>
+          <label for="fssaiNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            FSSAI Number
+            <span class="text-xs text-gray-500 ml-1">(Optional)</span>
+          </label>
+          <input
+            type="text"
+            id="fssaiNumber"
+            formControlName="fssaiNumber"
+            (input)="onlyNumbers($event, 'fssaiNumber')"
+            placeholder="14-digit FSSAI license"
+            maxlength="14"
+            [class.border-red-500]="isFieldInvalid('fssaiNumber')"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+          <p class="mt-1 text-xs text-gray-500">14 digit number</p>
+          <p *ngIf="getErrorMessage('fssaiNumber')" class="mt-1 text-xs text-red-600">
+            {{ getErrorMessage('fssaiNumber') }}
+          </p>
+        </div>
+
+        <!-- PAN Number -->
+        <div>
+          <label for="panNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            PAN Number
+            <span class="text-xs text-gray-500 ml-1">(Optional)</span>
+          </label>
+          <input
+            type="text"
+            id="panNumber"
+            formControlName="panNumber"
+            (input)="formatPANNumber($event)"
+            placeholder="e.g., ABCDE1234F"
+            maxlength="10"
+            [class.border-red-500]="isFieldInvalid('panNumber')"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          />
+          <p class="mt-1 text-xs text-gray-500">10 character alphanumeric</p>
+          <p *ngIf="getErrorMessage('panNumber')" class="mt-1 text-xs text-red-600">
+            {{ getErrorMessage('panNumber') }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tips Section -->
+    <div class="bg-blue-50 border-l-4 border-blue-400 p-4 dark:bg-blue-900/20">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <ion-icon name="information-circle" class="h-5 w-5 text-blue-400"></ion-icon>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-blue-800 dark:text-blue-300">Helpful Tips</h3>
+          <div class="mt-2 text-xs text-blue-700 dark:text-blue-400">
+            <ul class="list-disc list-inside space-y-1">
+              <li>Ensure all information matches your official documents</li>
+              <li>GST, FSSAI, and PAN numbers are optional but recommended</li>
+              <li>Double-check your contact information for verification</li>
+              <li>Use the "Get Current Location" button for accurate GPS coordinates</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -71,7 +71,7 @@ export class GoogleOptionComponent implements OnInit, AfterViewInit {
         this.searchInput.nativeElement,
         {
           types: ['establishment'],
-          componentRestrictions: { country: 'in' },
+          componentRestrictions: { country: ['us', 'in'] }, // US and India
           fields: [
             'name',
             'formatted_address',

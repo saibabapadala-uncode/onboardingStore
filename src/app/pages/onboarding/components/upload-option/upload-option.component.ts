@@ -121,6 +121,9 @@ export class UploadOptionComponent implements OnInit {
     if (data.panNumber) {
       this.parentForm.patchValue({ panNumber: data.panNumber });
     }
+    if (data.website) {
+      this.parentForm.patchValue({ website: data.website });
+    }
   }
 
   removeFile(index: number) {

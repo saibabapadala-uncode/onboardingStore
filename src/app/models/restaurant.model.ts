@@ -13,6 +13,14 @@ export interface Restaurant {
   fssaiNumber: string;
   panNumber: string;
   uploadedDocs: UploadedDocument[];
+  // Additional fields from Google Places API
+  website?: string;
+  rating?: number;
+  totalRatings?: number;
+  googleMapsUrl?: string;
+  openingHours?: string[];
+  businessStatus?: string;
+  placeTypes?: string[];
 }
 
 export interface UploadedDocument {

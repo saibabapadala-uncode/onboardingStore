@@ -13,6 +13,11 @@ import { Restaurant } from '../../models/restaurant.model';
 export class OnboardingPage implements OnInit {
   onboardingForm!: FormGroup;
   selectedSegment: string = 'google';
+  selectionOptions = [
+    { value: 'google', label: 'Google Search', icon: 'search-outline' },
+    { value: 'upload', label: 'Document Upload', icon: 'document-outline' },
+    { value: 'manual', label: 'Manual Entry', icon: 'create-outline' }
+  ];
   
   constructor(
     private fb: FormBuilder,
@@ -40,7 +45,15 @@ export class OnboardingPage implements OnInit {
       gstNumber: ['', Validators.pattern('^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$')],
       fssaiNumber: ['', Validators.pattern('^[0-9]{14}$')],
       panNumber: ['', Validators.pattern('^[A-Z]{5}[0-9]{4}[A-Z]{1}$')],
-      uploadedDocs: [[]]
+      uploadedDocs: [[]],
+      // Additional fields from Google Places API
+      website: [''],
+      rating: [null],
+      totalRatings: [null],
+      googleMapsUrl: [''],
+      openingHours: [[]],
+      businessStatus: [''],
+      placeTypes: [[]]
     });
   }
 

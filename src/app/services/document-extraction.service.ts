@@ -25,6 +25,7 @@ export class DocumentExtractionService {
       ownerName: '',
       contactNumber: '',
       email: '',
+      website: '',
       address: '',
       city: '',
       state: '',

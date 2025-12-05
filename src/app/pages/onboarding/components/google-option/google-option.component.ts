@@ -19,6 +19,7 @@ export class GoogleOptionComponent implements OnInit, AfterViewInit {
   autocomplete!: google.maps.places.Autocomplete;
   placeDetails: google.maps.places.PlaceResult | null = null;
   isLoading = false;
+  showOpeningHours = false;
   private loader: Loader;
   private googleMapsLoaded = false;
 
@@ -78,8 +79,15 @@ export class GoogleOptionComponent implements OnInit, AfterViewInit {
             'geometry',
             'address_components',
             'formatted_phone_number',
+            'international_phone_number',
             'website',
-            'place_id'
+            'place_id',
+            'rating',
+            'user_ratings_total',
+            'opening_hours',
+            'business_status',
+            'url',
+            'types'
           ]
         }
       );
@@ -113,6 +121,7 @@ export class GoogleOptionComponent implements OnInit, AfterViewInit {
     let state = '';
     let pincode = '';
     let country = '';
+    let countryCode = '';
 
     if (place.address_components) {
       for (const component of place.address_components) {
@@ -141,6 +150,7 @@ export class GoogleOptionComponent implements OnInit, AfterViewInit {
         }
         if (types.includes('country')) {
           country = component.long_name;
+          countryCode = component.short_name;
         }
       }
     }
@@ -169,6 +179,19 @@ export class GoogleOptionComponent implements OnInit, AfterViewInit {
     if (state) formValues.state = state;
     if (pincode) formValues.pincode = pincode;
 
+    // Add additional Google Places data
+    if (place.website) formValues.website = place.website;
+    if (place.rating) formValues.rating = place.rating;
+    if (place.user_ratings_total) formValues.totalRatings = place.user_ratings_total;
+    if (place.url) formValues.googleMapsUrl = place.url;
+    if (place.business_status) formValues.businessStatus = place.business_status;
+    if (place.types) formValues.placeTypes = place.types;
+    
+    // Extract opening hours if available
+    if (place.opening_hours?.weekday_text) {
+      formValues.openingHours = place.opening_hours.weekday_text;
+    }
+
     this.parentForm.patchValue(formValues);
 
     // Extract and clean phone number
@@ -188,7 +211,16 @@ export class GoogleOptionComponent implements OnInit, AfterViewInit {
       city,
       state,
       pincode,
+      country,
+      countryCode,
       phone: place.formatted_phone_number,
+      website: place.website,
+      rating: place.rating,
+      totalRatings: place.user_ratings_total,
+      googleMapsUrl: place.url,
+      businessStatus: place.business_status,
+      openingHours: place.opening_hours?.weekday_text,
+      types: place.types,
       location: {
         lat: place.geometry?.location?.lat(),
         lng: place.geometry?.location?.lng()
@@ -252,8 +284,15 @@ export class GoogleOptionComponent implements OnInit, AfterViewInit {
                   'geometry',
                   'address_components',
                   'formatted_phone_number',
+                  'international_phone_number',
                   'website',
-                  'place_id'
+                  'place_id',
+                  'rating',
+                  'user_ratings_total',
+                  'opening_hours',
+                  'business_status',
+                  'url',
+                  'types'
                 ]
               };
               

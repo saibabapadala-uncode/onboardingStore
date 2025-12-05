@@ -107,6 +107,21 @@
           </p>
         </div>
       </div>
+      
+      <!-- Website -->
+      <div class="mt-4">
+        <label for="website" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+          Website
+          <span class="text-xs text-gray-500 ml-1">(Optional)</span>
+        </label>
+        <input
+          type="url"
+          id="website"
+          formControlName="website"
+          placeholder="https://www.yourrestaurant.com"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        />
+      </div>
     </div>
 
     <!-- Location Information Section -->
@@ -165,7 +180,12 @@
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           >
             <option value="">Select State</option>
-            <option *ngFor="let state of indianStates" [value]="state">{{ state }}</option>
+            <optgroup label="US States">
+              <option *ngFor="let state of usStates" [value]="state">{{ state }}</option>
+            </optgroup>
+            <optgroup label="Indian States">
+              <option *ngFor="let state of indianStates" [value]="state">{{ state }}</option>
+            </optgroup>
           </select>
           <p *ngIf="getErrorMessage('state')" class="mt-1 text-xs text-red-600">
             {{ getErrorMessage('state') }}
